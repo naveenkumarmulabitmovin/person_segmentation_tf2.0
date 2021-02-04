@@ -8,8 +8,6 @@ import json
 import warnings
 import numpy as np
 
-from . import get_submodules_from_kwargs
-
 CLASS_INDEX = None
 CLASS_INDEX_PATH = ('https://storage.googleapis.com/download.tensorflow.org/'
                     'data/imagenet_class_index.json')
@@ -38,7 +36,7 @@ def _preprocess_numpy_input(x, data_format, mode, **kwargs):
     # Returns
         Preprocessed Numpy array.
     """
-    backend, _, _, _ = get_submodules_from_kwargs(kwargs)
+    backend = tf.keras.backend
     if not issubclass(x.dtype.type, np.floating):
         x = x.astype(backend.floatx(), copy=False)
 

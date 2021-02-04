@@ -14,10 +14,11 @@ from __future__ import print_function
 import os
 import warnings
 
-from . import get_submodules_from_kwargs
 from . import imagenet_utils
 from .imagenet_utils import decode_predictions
 from .imagenet_utils import _obtain_input_shape
+import tensorflow as tf
+
 
 preprocess_input = imagenet_utils.preprocess_input
 
@@ -28,10 +29,10 @@ WEIGHTS_PATH_NO_TOP = ('https://github.com/fchollet/deep-learning-models/'
                        'releases/download/v0.2/'
                        'resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5')
 
-backend = None
-layers = None
-models = None
-keras_utils = None
+backend = tf.keras.backend
+layers = tf.keras.layers
+models = tf.keras.models
+keras_utils = tf.keras.utils
 
 
 def identity_block(input_tensor, kernel_size, filters, stage, block):
@@ -190,7 +191,6 @@ def ResNet50(include_top=True,
             or invalid input shape.
     """
     global backend, layers, models, keras_utils
-    backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
 
     if not (weights in {'imagenet', None} or os.path.exists(weights)):
         raise ValueError('The `weights` argument should be either '
@@ -206,7 +206,7 @@ def ResNet50(include_top=True,
     input_shape = _obtain_input_shape(input_shape,
                                       default_size=224,
                                       min_size=32,
-                                      data_format=backend.image_data_format(),
+                                      data_format=tf.keras.backend.image_data_format(),
                                       require_flatten=include_top,
                                       weights=weights)
 
